@@ -12,7 +12,8 @@
     "test": "jest --config jest.json --coverage --verbose",
     "test:watch": "jest --config jest.json --watch --coverage --verbose",
     "precommit": "npm run lint:fix && npm run test",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "semantic-release": "semantic-release"
   },
   "author": {
     "name": "mattwalters5@gmail.com"
@@ -42,7 +43,8 @@
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.1",
     "jest": "26.0.1",
-    "regenerator-runtime": "0.13.5"
+    "regenerator-runtime": "0.13.5",
+    "semantic-release": "^17.4.4"
   },
   "dependencies": {
     "debug": "^4.1.1",
