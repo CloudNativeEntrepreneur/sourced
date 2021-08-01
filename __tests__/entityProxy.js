@@ -1,4 +1,4 @@
-import Entity from '../src/entityProxy'
+import { EntityProxy as Entity } from '../src/entityProxy'
 import util from 'util'
 
 function User () {

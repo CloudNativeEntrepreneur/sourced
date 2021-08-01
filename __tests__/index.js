@@ -1,15 +1,13 @@
 import {
   Entity,
   Value,
-  SourcedEntity,
-  SourcedValue
+  EntityProxy
 } from '../src/index'
 
 describe('index', () => {
-  it('exports Entity, Value, SourcedEntity, SourcedValue', () => {
+  it('exports Entity, Value, EntityProxy', () => {
     expect(Entity).toBeDefined()
     expect(Value).toBeDefined()
-    expect(SourcedEntity).toBeDefined()
-    expect(SourcedValue).toBeDefined()
+    expect(EntityProxy).toBeDefined()
   })
 })
