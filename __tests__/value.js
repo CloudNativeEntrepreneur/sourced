@@ -1,4 +1,4 @@
-import Value from '../src/value'
+import { Value } from '../src/value'
 
 describe('value', function () {
   it('should be immutable', function () {

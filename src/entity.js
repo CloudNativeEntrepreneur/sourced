@@ -1,10 +1,6 @@
-/* jslint node: true */
-
 import cloneDeep from 'lodash.clonedeep'
-import events from 'events'
+import events from 'eventemitter3'
 import debug from 'debug'
-import merge from 'lodash.merge'
-import util from 'util'
 
 const log = debug('sourced')
 const { EventEmitter } = events
@@ -18,6 +14,7 @@ const { EventEmitter } = events
 class EntityError extends Error {
   constructor(...args) {
     super(...args)
+    log('Entity Error: ', this)
     Error.captureStackTrace(this, EntityError)
   }
 }
@@ -35,7 +32,7 @@ const mergeProperties = new Map()
  * Creates an event-sourced Entity.
  *
  * @class {Function} Entity
- * @param {Object} [snapshot] A previously saved snapshot of an entity.
+ * @param {Object} [snapshot] A previously saved snapshot of an Entity.
  * @param {Array} [events] An array of events to apply on instantiation.
  * @requires events
  * @requires debug
@@ -43,8 +40,9 @@ const mergeProperties = new Map()
  * @requires lodash
  * @license MIT
  */
-class SourcedEntity extends EventEmitter {
-  constructor () {
+
+export class Entity extends EventEmitter {
+  constructor() {
     super()
 
     /**
@@ -68,19 +66,19 @@ class SourcedEntity extends EventEmitter {
     this.replaying = false
 
     /**
-     * Holds the version of the latest snapshot for the entity.
+     * Holds the version of the latest snapshot for the Entity.
      * @member {Number} snapshotVersion
      */
     this.snapshotVersion = 0
 
     /**
-     * Holds the event's timestamp in the entity.
+     * Holds the event's timestamp in the Entity.
      * @member {Number} timestamp
      */
     this.timestamp = Date.now()
 
     /**
-     * Holds the current version of the entity.
+     * Holds the current version of the Entity.
      * @member {Number} version
      */
     this.version = 0
@@ -89,7 +87,7 @@ class SourcedEntity extends EventEmitter {
   /**
    * Rehydrates by merging a snapshot, and replaying events on top.
    */
-  rehydrate (snapshot, events) {
+  rehydrate(snapshot, events) {
     log('rehydrating', this)
     /**
      * If a snapshot is provided, merge it.
@@ -110,9 +108,9 @@ class SourcedEntity extends EventEmitter {
    * Wrapper around the EventEmitter.emit method that adds a condition so events
    * are not fired during replay.
    */
-  emit () {
+  emit() {
     if (!this.replaying) {
-      events.EventEmitter.prototype.emit.apply(this, arguments)
+      EventEmitter.prototype.emit.apply(this, arguments)
     }
   }
 
@@ -120,7 +118,7 @@ class SourcedEntity extends EventEmitter {
    * Add events to the queue of events to emit. If called during replay, this
    * method does nothing.
    */
-  enqueue () {
+  enqueue() {
     if (!this.replaying) {
       this.eventsToEmit.push(arguments)
     }
@@ -128,17 +126,17 @@ class SourcedEntity extends EventEmitter {
 
   /**
    * Digest a command with given data.This is called whenever you want to record
-   * a command into the events for the entity. If called during replay, this
+   * a command into the events for the Entity. If called during replay, this
    * method does nothing.
    *
    * @param  {String} method  the name of the method/command you want to digest.
    * @param  {Object} data    the data that should be passed to the replay.
    */
-  digest (method, data) {
+  digest(method, data) {
     if (!this.replaying) {
       this.timestamp = Date.now()
       this.version = this.version + 1
-      log(util.format('digesting event \'%s\' w/ data %j', method, data))
+      log(`digesting event ${method} w/ data`, { method, data })
       this.newEvents.push({
         method: method,
         data: data,
@@ -149,7 +147,7 @@ class SourcedEntity extends EventEmitter {
   }
 
   /**
-   * Merge a snapshot onto the entity.
+   * Merge a snapshot onto the Entity.
    *
    * For every property passed in the snapshot, the value is deep-cloned and then
    * merged into the instance through mergeProperty. See mergeProperty for details.
@@ -157,10 +155,10 @@ class SourcedEntity extends EventEmitter {
    * @param  {Object} snapshot  snapshot object.
    * @see Entity.mergeProperty
    */
-  merge (snapshot) {
-    log(util.format('merging snapshot %j', snapshot))
-    for (var property in snapshot) {
-      if (Object.prototype.hasOwnProperty.call(snapshot, property)) { var val = cloneDeep(snapshot[property]) }
+  merge(snapshot) {
+    log('merging snapshot', { snapshot })
+    for (const property in snapshot) {
+      const val = cloneDeep(snapshot[property])
       this.mergeProperty(property, val)
     }
     return this
@@ -180,14 +178,19 @@ class SourcedEntity extends EventEmitter {
    * @see mergeProperties
    * @see Entity.mergeProperty
    */
-  mergeProperty (name, value) {
+  mergeProperty(name, value) {
     if (mergeProperties.size &&
       mergeProperties.has(Object.getPrototypeOf(this).constructor.name) &&
       mergeProperties.get(Object.getPrototypeOf(this).constructor.name).has(name) &&
       typeof mergeProperties.get(Object.getPrototypeOf(this).constructor.name).get(name) === 'function') {
       return mergeProperties.get(Object.getPrototypeOf(this).constructor.name).get(name).call(this, value)
-    } else if (typeof value === 'object' && typeof this[name] === 'object') merge(this[name], value)
-    else this[name] = value
+    } else if (typeof value === 'object' && typeof this[name] === 'object') {
+      Object.assign(this, {
+        [name]: value
+      })
+    } else {
+      this[name] = value
+    }
   }
 
   /**
@@ -204,23 +207,27 @@ class SourcedEntity extends EventEmitter {
    *
    * @param  {Array} events  an array of events to be replayed.
    */
-  replay (events) {
-    var self = this
+  replay(events) {
+    const self = this
 
     this.replaying = true
 
-    log(util.format('replaying events %j', events))
+    log('replaying events', { events })
 
     events.forEach(function (event) {
       if (self[event.method]) {
         self[event.method](event.data)
         self.version = event.version
       } else {
-        const classNameRegexes = [/function\s+(\w+)\s?\(/, /class\s+(\w+)\s+extends?/]
-        const match = classNameRegexes.find((regex) => regex.test(self.constructor))
+        const classNameRegexes = [
+          /function\s+(\w+)\s?\(/,
+          /class\s+(\w+)\s+extends?/
+        ]
+        const match = classNameRegexes.find((regex) =>
+          regex.test(self.constructor)
+        )
         const className = match.exec(self.constructor)[1]
-        const errorMessage = util.format('method \'%s\' does not exist on model \'%s\'', event.method, className.trim())
-        log(errorMessage)
+        const errorMessage = `method '${event.method}' does not exist on model '${className.trim()}'`
         throw new EntityError(errorMessage)
       }
     })
@@ -229,7 +236,7 @@ class SourcedEntity extends EventEmitter {
   }
 
   /**
-   * Create a snapshot of the current state of the entity instance.
+   * Create a snapshot of the current state of the Entity instance.
    *
    * Here the instance's snapshotVersion property is set to the current version,
    * then the instance is deep-cloned and the clone is trimmed of the internal
@@ -237,22 +244,22 @@ class SourcedEntity extends EventEmitter {
    *
    * @returns  {Object}
    */
-  snapshot () {
+  snapshot() {
     this.snapshotVersion = this.version
-    var snap = cloneDeep(this, true)
+    const snap = cloneDeep(this, true)
     return this.trimSnapshot(snap)
   }
 
   /**
    * Remove the internal sourced properties from the passed snapshot.
    *
-   * Snapshots are to contain only entity data properties. This trims all other
+   * Snapshots are to contain only Entity data properties. This trims all other
    * properties from the snapshot.
    *
    * @param  {Object} snapshot  the snapshot to be trimmed.
    * @see Entity.prototype.snapshot
    */
-  trimSnapshot (snapshot) {
+  trimSnapshot(snapshot) {
     delete snapshot.eventsToEmit
     delete snapshot.newEvents
     delete snapshot.replaying
@@ -296,7 +303,7 @@ class SourcedEntity extends EventEmitter {
     type.prototype[fn.name] = function () {
       const digestArgs = Array.prototype.slice.call(arguments)
       digestArgs.unshift(fn.name)
-      SourcedEntity.prototype.digest.apply(this, digestArgs)
+      Entity.prototype.digest.apply(this, digestArgs)
 
       const methodArgs = Array.prototype.slice.call(arguments)
       return fn.apply(this, methodArgs)
@@ -338,5 +345,3 @@ class SourcedEntity extends EventEmitter {
     mergeProperties.get(type.name).set(name, fn)
   }
 }
-
-export default SourcedEntity

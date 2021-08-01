@@ -1,4 +1,4 @@
-import Entity from '../src/entity'
+import { Entity } from '../src/entity'
 
 class TestEntity extends Entity {
   constructor (snapshot, events) {
@@ -71,7 +71,7 @@ describe('entity', function () {
   })
   describe('#enqueue', function () {
     it('should enqueue EventEmitter style events by adding them to array of events to emit', function () {
-      var test = new TestEntity()
+      const test = new TestEntity()
 
       test.enqueue('something.happened', { data: 'data' }, { data2: 'data2' })
 
@@ -86,12 +86,12 @@ describe('entity', function () {
   })
   describe('#merge', function () {
     it('should merge a snapshot into the current snapshot, overwriting any common properties', function () {
-      var snapshot = {
+      const snapshot = {
         property: true,
         property2: true
       }
 
-      var test = new TestEntity()
+      const test = new TestEntity()
 
       test.merge(snapshot)
 
@@ -99,11 +99,11 @@ describe('entity', function () {
       expect(test.property2).toEqual(true)
     })
     it('should merge a complex snapshot (missing newly added fields) while maintaining defaulted sub-object values', function () {
-      var snapshot = {
+      const snapshot = {
         property: true
       }
 
-      var test = new TestEntity()
+      const test = new TestEntity()
 
       test.merge(snapshot)
 
@@ -114,7 +114,7 @@ describe('entity', function () {
       expect(test.property2.subProperty2).toEqual(true)
     })
     it('should merge a complex snapshot while maintaining defaulted sub-object values', function () {
-      var snapshot = {
+      const snapshot = {
         property: true,
         property2: {
           subProperty: true,
@@ -122,7 +122,7 @@ describe('entity', function () {
         }
       }
 
-      var test = new TestEntity()
+      const test = new TestEntity()
 
       test.merge(snapshot)
 
@@ -135,28 +135,28 @@ describe('entity', function () {
   })
   describe('#replay', function () {
     it('should throw an entity error with name of model when attempting to replay a method an entity does not implement', function () {
-      var events = [
+      const events = [
         {
           method: 'someMethod',
           data: { some: 'param' }
         }
       ]
 
-      var test = new TestEntity()
+      const test = new TestEntity()
 
       expect(function () {
         test.replay(events)
       }).toThrow('method \'someMethod\' does not exist on model \'TestEntity\'')
     })
     it('should not emit events during replay', function () {
-      var events = [
+      const events = [
         {
           method: 'method',
           data: { some: 'param' }
         }
       ]
 
-      var test = new TestEntity()
+      const test = new TestEntity()
 
       test.on('method-ed', function () {
         throw new Error('should not emit during replay')
@@ -172,7 +172,7 @@ describe('entity', function () {
 
       test.method(data)
 
-      var snapshot = test.snapshot()
+      const snapshot = test.snapshot()
 
       expect(snapshot.property2).toEqual(data.data)
       expect(snapshot.snapshotVersion).toEqual(1)

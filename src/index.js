@@ -1,12 +1,9 @@
-import SourcedEntity from './entity'
-import Entity from './entityProxy'
-import Value from './value'
-
-const SourcedValue = Value
+import { Entity } from './entity'
+import { Value } from './value'
+import { EntityProxy } from './entityProxy'
 
 export {
-  SourcedEntity,
-  SourcedValue,
   Entity,
-  Value
+  Value,
+  EntityProxy
 }
