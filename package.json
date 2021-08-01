@@ -12,7 +12,8 @@
     "test": "jest --config jest.json --coverage --verbose",
     "test:watch": "jest --config jest.json --watch --coverage --verbose",
     "precommit": "npm run lint:fix && npm run test",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "semantic-release": "semantic-release"
   },
   "author": {
     "name": "mattwalters5@gmail.com"
@@ -23,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/mateodelnorte/sourced.git"
+    "url": "https://github.com/CloudNativeEntrepreneur/sourced.git"
   },
   "license": "MIT",
   "devDependencies": {
@@ -34,6 +35,7 @@
     "babel-eslint": "10.1.0",
     "babel-jest": "26.0.1",
     "babel-plugin-module-resolver": "4.0.0",
+    "codecov": "3.8.2",
     "eslint": "7.3.0",
     "eslint-config-standard": "14.1.1",
     "eslint-plugin-import": "2.21.2",
@@ -41,11 +43,12 @@
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.1",
     "jest": "26.0.1",
-    "regenerator-runtime": "0.13.5"
+    "regenerator-runtime": "0.13.5",
+    "semantic-release": "17.4.4"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "lodash.clonedeep": "^4.5.0",
-    "lodash.merge": "^4.6.2"
+    "debug": "4.1.1",
+    "lodash.clonedeep": "4.5.0",
+    "lodash.merge": "4.6.2"
   }
 }
