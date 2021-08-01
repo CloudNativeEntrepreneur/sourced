@@ -23,7 +23,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/mateodelnorte/sourced.git"
+    "url": "https://github.com/CloudNativeEntrepreneur/sourced.git"
   },
   "license": "MIT",
   "devDependencies": {
