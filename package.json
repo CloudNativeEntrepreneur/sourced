@@ -44,11 +44,11 @@
     "eslint-plugin-standard": "4.0.1",
     "jest": "26.0.1",
     "regenerator-runtime": "0.13.5",
-    "semantic-release": "^17.4.4"
+    "semantic-release": "17.4.4"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "lodash.clonedeep": "^4.5.0",
-    "lodash.merge": "^4.6.2"
+    "debug": "4.1.1",
+    "lodash.clonedeep": "4.5.0",
+    "lodash.merge": "4.6.2"
   }
 }
