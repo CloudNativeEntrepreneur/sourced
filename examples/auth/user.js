@@ -1,4 +1,4 @@
-var Entity = require('../../dist/index').Entity,
+var Entity = require('../../dist/index').EntityProxy,
     events = require('events'),
     util = require('util');
 

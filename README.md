@@ -3,7 +3,8 @@
 sourced
 =======
 
-Tiny framework for building models with the [event sourcing](http://cqrs.nu/Faq/event-sourcing) pattern (events and snapshots). 
+Tiny framework for building models with the [event sourcing](http://cqrs.nu/Faq/event-sourcing) pattern (events and snapshots) that works in Node.js and the browser.
+
 Unlike Active Record where entity state is persisted on a one-model-per row database format, event sourcing stores all the 
 changes (events) to the entity, rather than just its current state. The current state is derived by loading all events, or a 
 latest snapshot plus subsequent events, and replaying them against the entity. 
@@ -14,13 +15,17 @@ For example usage, see the [examples](./examples) and [tests](./test).
 
 Sourced makes no assumptions about how you _store_ your events and snapshots. The library is small and tight with only the required functionality to define entities and their logic, enqueue and emit events, and track event state to later be persisted. To actually persist, use one of the following libraries or implement your own: 
 
-- [sourced-repo-mongo](https://github.com/mateodelnorte/sourced-repo-mongo)
-- ~~[sourced-repo-couchdb](https://github.com/dermidgen/sourced-repo-couchdb)~~ (partially implemented)
+- [mateodelnorte/sourced-repo-mongo](https://github.com/mateodelnorte/sourced-repo-mongo)
+
+Partially Implemented (only get, commit - no getAll, commitAll - ok for many use cases - PRs welcome!)
+- [dermidgen/sourced-repo-couchdb](https://github.com/dermidgen/sourced-repo-couchdb)
+- [CloudNativeEntrepreneur/sourced-repo-svelte-local-storage-store](https://github.com/CloudNativeEntrepreneur/sourced-repo-svelte-local-storage-store)
+- [wolfejw86/sourced-repo-arc-dynamo](https://github.com/wolfejw86/sourced-repo-arc-dynamo)
 
 # ES6 Example 
 
 ```javascript
-const Entity = require('sourced').SourcedEntity;
+const Entity = require('sourced').Entity;
 
 class Market extends Entity {
   constructor(snapshot, events) {
@@ -351,3 +356,42 @@ Extending native Error.
 | --- | --- | --- | --- |
 | msg | <code>String</code> |  | The error message. |
 | [constr] | <code>Object</code> | <code>this</code> | The constructor or instance. |
+
+# In the browser
+
+Sourced works just the same in the browser as in Node.js, though you'll want to use it with a browser based repo, such as [sourced-repo-svelte-local-storage-store](https://github.com/CloudNativeEntrepreneur/sourced-repo-svelte-local-storage-store).
+
+You can see an example event sourced SvelteKit application here: [CloudNativeEntrepreneur/sveltekit-eventsourced-funnel](https://github.com/CloudNativeEntrepreneur/sveltekit-eventsourced-funnel)
+
+# Upgrading from V2 to v3
+
+To upgrade from v2, to v3, update your imports of `SourcedEntity` to `Entity`.
+
+Before:
+```
+import { SourcedEntity as Entity } from 'sourced'
+
+class YourAggregate extends Entity {
+```
+
+Now:
+```
+import { Entity } from 'sourced'
+
+class YourAggregate extends Entity {
+// ...
+```
+
+If you are using classical prototypical inheritance, then you were using the `Entity` export - this was actually a proxy constructor that allowed the classical syntax to work with ES6 classes. This is now named `EntityProxy`.
+
+Before:
+```
+const Entity = require('sourced').Entity
+```
+
+Now:
+```
+const Entity = require('sourced').EntityProxy
+```
+
+See examples directory for an examply of using the `EntityProxy` - run it with `npm ci && npm run build && node examples/auth/example.js`
