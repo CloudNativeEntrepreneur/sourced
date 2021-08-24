@@ -166,7 +166,7 @@ describe('entity', function () {
     })
   })
   describe('#snapshot', function () {
-    it('should return object with current state of the entity', function () {
+    it('should return object with current state of the entity and increase snapshotVersion', function () {
       const test = new TestEntity()
       const data = { data: 'data' }
 
@@ -177,6 +177,24 @@ describe('entity', function () {
       expect(snapshot.property2).toEqual(data.data)
       expect(snapshot.snapshotVersion).toEqual(1)
       expect(snapshot.version).toEqual(1)
+    })
+  })
+  describe('#state', function () {
+    it('should return object with current state of the entity', function () {
+      const test = new TestEntity()
+      const data = { data: 'data' }
+
+      test.method(data)
+      expect(test.newEvents.length).toBe(1)
+
+      const state = test.state()
+
+      expect(test.newEvents.length).toBe(1)
+      expect(state.property).toEqual(false)
+      expect(state.property2).toEqual(data.data)
+      expect(state.snapshotVersion).toEqual(0)
+      expect(state.version).toEqual(1)
+
     })
   })
 })
