@@ -189,6 +189,13 @@ constructor to give a more descriptive error.
 | --- | --- | --- |
 | events | <code>Array</code> | an array of events to be replayed. |
 
+<a name="Entity+state"></a>
+
+### entity.state() ⇒ <code>Object</code>
+Return a clone of current state of the entity instance without event sourcing properties. Does not modify anything.
+
+**Kind**: instance method of <code>[Entity](#Entity)</code>
+
 <a name="Entity+snapshot"></a>
 
 ### entity.snapshot() ⇒ <code>Object</code>

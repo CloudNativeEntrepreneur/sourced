@@ -236,6 +236,20 @@ export class Entity extends EventEmitter {
   }
 
   /**
+   * Returns a clone of the entity's current state without the event sourcing properties
+   *
+   * Here the instance's snapshotVersion property is set to the current version,
+   * then the instance is deep-cloned and the clone is trimmed of the internal
+   * sourced attributes using trimSnapshot and returned.
+   *
+   * @returns  {Object}
+   */
+  state() {
+    const state = cloneDeep(this, true)
+    return this.trimSnapshot(state)
+  }
+
+  /**
    * Create a snapshot of the current state of the Entity instance.
    *
    * Here the instance's snapshotVersion property is set to the current version,
