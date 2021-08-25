@@ -33,9 +33,11 @@ function Inventory(...args: any[]) {
 
 util.inherits(Inventory, EntityProxy);
 
-function Wheel({ status } = {
-  status: 'stopped'
-}) {
+function Wheel(
+  { status } = {
+    status: "stopped",
+  }
+) {
   this.status = status;
 }
 
