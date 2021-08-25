@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/mateodelnorte/sourced.svg?branch=master)](https://travis-ci.org/mateodelnorte/sourced)
+[![codecov](https://codecov.io/gh/cloudnativeentrepreneur/sourced/branch/master/graph/badge.svg?token=QXt8Vlir6A)](https://codecov.io/gh/cloudnativeentrepreneur/sourced)
 
 sourced
 =======
