@@ -194,7 +194,6 @@ describe('entity', function () {
       expect(state.property2).toEqual(data.data)
       expect(state.snapshotVersion).toEqual(0)
       expect(state.version).toEqual(1)
-
     })
   })
 })
