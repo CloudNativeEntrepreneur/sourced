@@ -1,29 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "target": "ES2015",
+    "module": "ES2020",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
-    "allowJs": false,
-    /* Allow javascript files to be compiled. */
-    "checkJs": false,
-    /* Report errors in .js files. */
-    "sourceMap": true,
-    /* Generates corresponding '.map' file. */
-    "declaration": true,
-    /* Generates corresponding '.d.ts' file. */
-    // "strict": true,
-    /* Allow implicit any */
+    "strict": false,
     "noImplicitAny": false,
-    /* Raise error on expressions and declarations with an implied 'any' type. */
-    "strictFunctionTypes": true,
-    /* Enable strict checking of function types. */
-    "allowSyntheticDefaultImports": true,
-    "outDir": "dist",
-    /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
-    "typeRoots": ["node_modules/@types"]
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "outDir": "./dist/esm"
   },
-  "include": ["types", "src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "include": [
+    "./src"
+  ]
 }

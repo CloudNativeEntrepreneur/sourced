@@ -1,9 +1,10 @@
-import cloneDeep from 'lodash.clonedeep'
-import events from 'eventemitter3'
-import debug from 'debug'
+/* jslint node: true */
 
-const log = debug('sourced')
-const { EventEmitter } = events
+import debug from "debug";
+import EventEmitter from "eventemitter3";
+import cloneDeep from "lodash.clonedeep";
+
+const log = debug("sourced");
 
 /**
  * Extending native Error.
@@ -13,20 +14,20 @@ const { EventEmitter } = events
  */
 class EntityError extends Error {
   constructor(...args) {
-    super(...args)
-    log('Entity Error: ', this)
-    Error.captureStackTrace(this, EntityError)
+    super(...args);
+    log("Entity Error: ", this);
+    Error.captureStackTrace(this, EntityError);
   }
 }
 
 /**
-   * mergeProperties holds a map of entity types to properties.
-   *
-   * @see Entity.mergeProperty
-   * @see Entity.prototype.mergeProperty
-   * @static
-   */
-const mergeProperties = new Map()
+ * mergeProperties holds a map of entity types to properties.
+ *
+ * @see Entity.mergeProperty
+ * @see Entity.prototype.mergeProperty
+ * @static
+ */
+const mergeProperties = new Map();
 
 /**
  * Creates an event-sourced Entity.
@@ -34,73 +35,78 @@ const mergeProperties = new Map()
  * @class {Function} Entity
  * @param {Object} [snapshot] A previously saved snapshot of an Entity.
  * @param {Array} [events] An array of events to apply on instantiation.
- * @requires events
+ * @requires eventemitter3
  * @requires debug
- * @requires util
- * @requires lodash
+ * @requires lodash.clonedeep
  * @license MIT
  */
 
 export class Entity extends EventEmitter {
+  eventsToEmit: any[];
+  newEvents: any[];
+  replaying: boolean;
+  snapshotVersion: number;
+  timestamp: number;
+  version: number;
   constructor() {
-    super()
+    super();
 
     /**
      * [Description]
      * @member {Array} eventsToEmit
      * @todo discuss the use of this so it can be documented better.
      */
-    this.eventsToEmit = []
+    this.eventsToEmit = [];
 
     /**
      * [Description]
      * @member {Array} newEvents
      * @todo discuss the use of this so it can be documented better.
      */
-    this.newEvents = []
+    this.newEvents = [];
 
     /**
      * Boolean to prevent emit, enqueue and digest from running during replay.
      * @member {Boolean} replaying
      */
-    this.replaying = false
+    this.replaying = false;
 
     /**
      * Holds the version of the latest snapshot for the Entity.
      * @member {Number} snapshotVersion
      */
-    this.snapshotVersion = 0
+    this.snapshotVersion = 0;
 
     /**
      * Holds the event's timestamp in the Entity.
      * @member {Number} timestamp
      */
-    this.timestamp = Date.now()
+    this.timestamp = Date.now();
 
     /**
      * Holds the current version of the Entity.
      * @member {Number} version
      */
-    this.version = 0
+    this.version = 0;
   }
 
   /**
    * Rehydrates by merging a snapshot, and replaying events on top.
    */
-  rehydrate(snapshot, events) {
-    log('rehydrating', this)
+  rehydrate(snapshot: any, events: any[]) {
+    log("rehydrating", this);
     /**
      * If a snapshot is provided, merge it.
      */
     if (snapshot) {
-      this.merge(snapshot)
+      this.merge(snapshot);
     }
 
     /**
      * If events are also provided, replay them
      */
     if (events) {
-      this.replay(events)
+      this.replay(events);
     }
   }
 
@@ -108,19 +114,20 @@ export class Entity extends EventEmitter {
    * Wrapper around the EventEmitter.emit method that adds a condition so events
    * are not fired during replay.
    */
-  emit() {
+  emit(event: string | symbol, ...args: any[]): boolean {
     if (!this.replaying) {
-      EventEmitter.prototype.emit.apply(this, arguments)
+      super.emit(event, ...args);
     }
+    return true;
   }
 
   /**
    * Add events to the queue of events to emit. If called during replay, this
    * method does nothing.
    */
-  enqueue() {
+  enqueue(...args: any[]) {
     if (!this.replaying) {
-      this.eventsToEmit.push(arguments)
+      this.eventsToEmit.push(args);
     }
   }
 
@@ -132,17 +139,17 @@ export class Entity extends EventEmitter {
    * @param  {String} method  the name of the method/command you want to digest.
    * @param  {Object} data    the data that should be passed to the replay.
    */
-  digest(method, data) {
+  digest(method: string, data: any) {
     if (!this.replaying) {
-      this.timestamp = Date.now()
-      this.version = this.version + 1
-      log(`digesting event ${method} w/ data`, { method, data })
+      this.timestamp = Date.now();
+      this.version = this.version + 1;
+      log(`digesting event ${method} w/ data`, { method, data });
       this.newEvents.push({
         method: method,
         data: data,
         timestamp: this.timestamp,
-        version: this.version
-      })
+        version: this.version,
+      });
     }
   }
 
@@ -155,13 +162,13 @@ export class Entity extends EventEmitter {
    * @param  {Object} snapshot  snapshot object.
    * @see Entity.mergeProperty
    */
-  merge(snapshot) {
-    log('merging snapshot', { snapshot })
+  merge(snapshot: any) {
+    log("merging snapshot", { snapshot });
     for (const property in snapshot) {
-      const val = cloneDeep(snapshot[property])
-      this.mergeProperty(property, val)
+      const val = cloneDeep(snapshot[property]);
+      this.mergeProperty(property, val);
     }
-    return this
+    return this;
   }
 
   /**
@@ -178,18 +185,27 @@ export class Entity extends EventEmitter {
    * @see mergeProperties
    * @see Entity.mergeProperty
    */
-  mergeProperty(name, value) {
-    if (mergeProperties.size &&
+  mergeProperty(name: string, value: any) {
+    if (
+      mergeProperties.size &&
       mergeProperties.has(Object.getPrototypeOf(this).constructor.name) &&
-      mergeProperties.get(Object.getPrototypeOf(this).constructor.name).has(name) &&
-      typeof mergeProperties.get(Object.getPrototypeOf(this).constructor.name).get(name) === 'function') {
-      return mergeProperties.get(Object.getPrototypeOf(this).constructor.name).get(name).call(this, value)
-    } else if (typeof value === 'object' && typeof this[name] === 'object') {
+      mergeProperties
+        .get(Object.getPrototypeOf(this).constructor.name)
+        .has(name) &&
+      typeof mergeProperties
+        .get(Object.getPrototypeOf(this).constructor.name)
+        .get(name) === "function"
+    ) {
+      return mergeProperties
+        .get(Object.getPrototypeOf(this).constructor.name)
+        .get(name)
+        .call(this, value);
+    } else if (typeof value === "object" && typeof this[name] === "object") {
       Object.assign(this, {
-        [name]: value
-      })
+        [name]: value,
+      });
     } else {
-      this[name] = value
+      this[name] = value;
     }
   }
 
@@ -208,31 +224,31 @@ export class Entity extends EventEmitter {
    * @param  {Array} events  an array of events to be replayed.
    */
   replay(events) {
-    const self = this
+    this.replaying = true;
 
-    this.replaying = true
+    log("replaying events", { events });
 
-    log('replaying events', { events })
-
-    events.forEach(function (event) {
-      if (self[event.method]) {
-        self[event.method](event.data)
-        self.version = event.version
+    events.forEach((event) => {
+      if (this[event.method]) {
+        this[event.method](event.data);
+        this.version = event.version;
       } else {
         const classNameRegexes = [
           /function\s+(\w+)\s?\(/,
-          /class\s+(\w+)\s+extends?/
-        ]
+          /class\s+(\w+)\s+extends?/,
+        ];
         const match = classNameRegexes.find((regex) =>
-          regex.test(self.constructor)
-        )
-        const className = match.exec(self.constructor)[1]
-        const errorMessage = `method '${event.method}' does not exist on model '${className.trim()}'`
-        throw new EntityError(errorMessage)
+          regex.test(this.constructor.toString())
+        );
+        const className = match.exec(this.constructor!.toString())[1];
+        const errorMessage = `method '${
+          event.method
+        }' does not exist on model '${className.trim()}'`;
+        throw new EntityError(errorMessage);
       }
-    })
+    });
 
-    this.replaying = false
+    this.replaying = false;
   }
 
   /**
@@ -244,13 +260,16 @@ export class Entity extends EventEmitter {
    *
    * @returns  {Object}
    */
-  state() {
-    const state = cloneDeep(this, true)
-    return this.trimSnapshot(state)
+  state(): Omit<
+    this,
+    "eventsToEmit" | "newEvents" | "replaying" | "_events" | "_maxListeners"
+  > {
+    const state = cloneDeep(this);
+    return this.trimSnapshot(state);
   }
 
   /**
-   * Create a snapshot of the current state of the Entity instance.
+   * Create a snapshot of the current state of the entity instance.
    *
    * Here the instance's snapshotVersion property is set to the current version,
    * then the instance is deep-cloned and the clone is trimmed of the internal
@@ -258,29 +277,36 @@ export class Entity extends EventEmitter {
    *
    * @returns  {Object}
    */
-  snapshot() {
-    this.snapshotVersion = this.version
-    const snap = cloneDeep(this, true)
-    return this.trimSnapshot(snap)
+  snapshot(): Omit<
+    this,
+    "eventsToEmit" | "newEvents" | "replaying" | "_events" | "_maxListeners"
+  > {
+    this.snapshotVersion = this.version;
+    const snap = cloneDeep(this);
+    return this.trimSnapshot(snap);
   }
 
   /**
    * Remove the internal sourced properties from the passed snapshot.
    *
-   * Snapshots are to contain only Entity data properties. This trims all other
+   * Snapshots are to contain only entity data properties. This trims all other
    * properties from the snapshot.
    *
    * @param  {Object} snapshot  the snapshot to be trimmed.
    * @see Entity.prototype.snapshot
    */
-  trimSnapshot(snapshot) {
-    delete snapshot.eventsToEmit
-    delete snapshot.newEvents
-    delete snapshot.replaying
-    delete snapshot._events
-    delete snapshot._maxListeners
-    delete snapshot.domain
-    return snapshot
+  trimSnapshot(
+    snapshot
+  ): Omit<
+    this,
+    "eventsToEmit" | "newEvents" | "replaying" | "_events" | "_maxListeners"
+  > {
+    delete snapshot.eventsToEmit;
+    delete snapshot.newEvents;
+    delete snapshot.replaying;
+    delete snapshot._events;
+    delete snapshot._maxListeners;
+    return snapshot;
   }
 
   /**
@@ -310,23 +336,24 @@ export class Entity extends EventEmitter {
    *    });
    *
    */
-  static digestMethod (type, fn) {
-    if (!type) throw new EntityError('type is required for digest method definitions')
-    if (!fn) throw new EntityError('a function is required for digest method definitions')
-    if (!fn.name) throw new EntityError('Anonmyous functions are not allowed in digest method definitions. Please provide a function name')
-    type.prototype[fn.name] = function () {
-      const digestArgs = Array.prototype.slice.call(arguments)
-      digestArgs.unshift(fn.name)
-      Entity.prototype.digest.apply(this, digestArgs)
+  static digestMethod(type: any, fn: any) {
+    if (!fn.name)
+      throw new EntityError(
+        "Anonmyous functions are not allowed in digest method definitions. Please provide a function name"
+      );
+    type.prototype[fn.name] = function (...args: any[]) {
+      const digestArgs = Array.prototype.slice.call(args);
+      digestArgs.unshift(fn.name);
+      Entity.prototype.digest.apply(this, digestArgs);
 
-      const methodArgs = Array.prototype.slice.call(arguments)
-      return fn.apply(this, methodArgs)
-    }
+      const methodArgs = Array.prototype.slice.call(args);
+      return fn.apply(this, methodArgs);
+    };
   }
 
   /**
    * Convenience function to store references to functions that should be run
-   * when mergin a particular property.
+   * when merging a particular property.
    *
    * @param  {Object} type  the entity class to which the property->fn belongs to.
    * @param  {String} name  the name of the property that holds the fn.
@@ -354,8 +381,9 @@ export class Entity extends EventEmitter {
    *    this.wheel = new Wheel(); // for instantiating our wheel from saved values in a database
    *  });
    */
-  static mergeProperty (type, name, fn) {
-    if (!mergeProperties.has(type.name)) mergeProperties.set(type.name, new Map())
-    mergeProperties.get(type.name).set(name, fn)
+  static mergeProperty(type, name, fn) {
+    if (!mergeProperties.has(type.name))
+      mergeProperties.set(type.name, new Map());
+    mergeProperties.get(type.name).set(name, fn);
   }
 }

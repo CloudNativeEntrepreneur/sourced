@@ -2,17 +2,20 @@
   "name": "sourced",
   "version": "0.0.0-development",
   "description": "Tiny framework for building models with the event sourcing pattern (events and snapshots). Now with Typescript and browser support.",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "docs": "mocha -R doc -t 5000 > docs/docs.html",
     "lint": "eslint src __tests__",
     "lint:fix": "eslint --fix src __tests__",
     "markdown": "mocha -R markdown -t 5000 > docs/docs.md",
-    "test": "jest --config jest.json --coverage --verbose",
-    "test:watch": "jest --config jest.json --watch --coverage --verbose",
+    "test": "DEBUG=sourced jest --config jest.json --coverage --verbose",
+    "test:watch": "DEBUG=sourced jest --config jest.json --watch --coverage --verbose",
     "prepublish": "npm run build",
     "semantic-release": "semantic-release",
     "prepare": "husky install"
