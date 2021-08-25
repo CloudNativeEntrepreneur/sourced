@@ -1,8 +1,9 @@
 # sourced v4
-- Typescript rewrite - thanks to work on this at https://github.com/PDMLab/sourced-ts 
+- Typescript rewrite - thanks to work on this at https://github.com/PDMLab/sourced-ts by @alexander.zeitler and @stephanknull, pulled in by @patrickleet
+- BREAKING CHANGE: now publishes ESM and CJS modules at /dist/esm and /dist/cjs
 
 # sourced v3
-- Browser support by using `eventemitter3.EventEmitter` instead of Node `events.EventEmitter`
+- Browser support by using `eventemitter3.EventEmitter` instead of Node `events.EventEmitter` by @patrickleet
 - BREAKING CHANGE: `Entity` is now `EntityProxy`. `SourcedEntity` is now `Entity`
 
 # sourced v2
