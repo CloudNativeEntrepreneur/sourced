@@ -1,8 +1,9 @@
 {
+  "preset": "ts-jest",
   "testEnvironment": "node",
   "modulePaths": [
     "src",
     "/node_modules/"
   ],
-  "collectCoverageFrom": ["src/*.js"]
+  "collectCoverageFrom": ["src/*.(js|ts)"]
 }
