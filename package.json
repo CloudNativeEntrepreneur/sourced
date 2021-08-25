@@ -1,26 +1,30 @@
 {
   "name": "sourced",
   "version": "0.0.0-development",
-  "description": "Tiny framework for building models with the event sourcing  pattern (events and snapshots).",
+  "description": "Tiny framework for building models with the event sourcing pattern (events and snapshots). Now with Typescript and browser support.",
   "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "babel src -d dist",
+    "build": "tsc",
     "docs": "mocha -R doc -t 5000 > docs/docs.html",
     "lint": "eslint src __tests__",
     "lint:fix": "eslint --fix src __tests__",
     "markdown": "mocha -R markdown -t 5000 > docs/docs.md",
     "test": "jest --config jest.json --coverage --verbose",
     "test:watch": "jest --config jest.json --watch --coverage --verbose",
-    "precommit": "npm run lint:fix && npm run test",
     "prepublish": "npm run build",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "prepare": "husky install"
   },
   "author": {
     "name": "mattwalters5@gmail.com"
   },
   "contributors": [
     "mattwalters5@gmail.com",
-    "pat@patscott.io"
+    "pat@patscott.io",
+    "alexander.zeitler@pdmlab.com",
+    "stephanknull"
   ],
   "repository": {
     "type": "git",
@@ -29,27 +33,40 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "7.14.8",
-    "@babel/core": "7.14.8",
+    "@babel/core": "7.15.0",
     "@babel/plugin-proposal-object-rest-spread": "7.14.7",
-    "@babel/preset-env": "7.14.8",
-    "babel-eslint": "10.1.0",
-    "babel-jest": "27.0.6",
-    "babel-plugin-module-resolver": "4.1.0",
+    "@babel/preset-env": "7.15.0",
+    "@commitlint/cli": "13.1.0",
+    "@commitlint/config-conventional": "13.1.0",
+    "@types/debug": "4.1.7",
+    "@types/jest": "27.0.1",
+    "@types/lodash.clonedeep": "4.5.6",
+    "@types/lodash.merge": "4.6.6",
+    "@types/node": "16",
+    "@types/sinon": "10.0.2",
+    "@typescript-eslint/eslint-plugin": "4.29.3",
+    "@typescript-eslint/parser": "4.29.3",
     "codecov": "3.8.3",
     "eslint": "7.32.0",
-    "eslint-config-standard": "16.0.3",
-    "eslint-plugin-import": "2.23.4",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "5.1.0",
-    "eslint-plugin-standard": "4.1.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-import": "2.24.2",
+    "eslint-plugin-prettier": "3.4.1",
+    "eslint-watch": "7.0.0",
+    "husky": "7.0.2",
     "jest": "27.0.6",
+    "lint-staged": "11.1.2",
     "regenerator-runtime": "0.13.9",
-    "semantic-release": "17.4.4"
+    "semantic-release": "17.4.6",
+    "ts-jest": "27.0.5",
+    "typescript": "4.3.5"
   },
   "dependencies": {
     "debug": "4.3.2",
     "eventemitter3": "4.0.7",
     "lodash.clonedeep": "4.5.0",
     "lodash.merge": "4.6.2"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
   }
 }

@@ -1,0 +1,22 @@
+# ignore all files in the __tests__ / directory
+__tests__
+coverage
+
+# ignore ESLint and EditorConfig
+.editorconfig
+.eslintrc.js
+.husky
+.github
+.prettierrc.js
+commitlint.config.js
+jest.config.js
+
+# JetBrains IDE settings
+.idea
+
+# VS Code settings
+.vscode
+
+# VuePress
+.cache
+.temp
