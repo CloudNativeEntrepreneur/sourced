@@ -4,7 +4,7 @@
 sourced
 =======
 
-Tiny framework for building models with the [event sourcing](http://cqrs.nu/Faq/event-sourcing) pattern (events and snapshots) that works in Node.js and the browser.
+Tiny framework for building models with the [event sourcing](http://cqrs.nu/Faq/event-sourcing) pattern (events and snapshots) that works in Node.js and the browser. Now written in Typescript and published in ESM and CJS.
 
 Unlike Active Record where entity state is persisted on a one-model-per row database format, event sourcing stores all the 
 changes (events) to the entity, rather than just its current state. The current state is derived by loading all events, or a 
@@ -12,7 +12,7 @@ latest snapshot plus subsequent events, and replaying them against the entity.
 
 One large benefit of event sourcing: your data *_is_* your audit trail. Zero discrepancies. 
 
-For example usage, see the [examples](./examples) and [tests](./test). 
+For example usage, see the [examples](./examples) and [__tests__](./__tests__).
 
 Sourced makes no assumptions about how you _store_ your events and snapshots. The library is small and tight with only the required functionality to define entities and their logic, enqueue and emit events, and track event state to later be persisted. To actually persist, use one of the following libraries or implement your own: 
 
@@ -75,7 +75,7 @@ class Market extends Entity {
 {Function} Entity
 
 **Kind**: global class
-**Requires**: <code>module:events</code>, <code>module:debug</code>, <code>module:util</code>, <code>module:lodash</code>
+**Requires**: <code>module:eventemitter3</code>, <code>module:debug</code>, <code>module:lodash.clonedeep</code>
 **License**: MIT
 
 * [Entity](#Entity)
