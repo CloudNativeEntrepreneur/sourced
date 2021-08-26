@@ -13,7 +13,6 @@
     "docs": "mocha -R doc -t 5000 > docs/docs.html",
     "lint": "eslint src __tests__",
     "lint:fix": "eslint --fix src __tests__",
-    "markdown": "mocha -R markdown -t 5000 > docs/docs.md",
     "test": "DEBUG=sourced jest --config jest.json --coverage --verbose",
     "test:watch": "DEBUG=sourced jest --config jest.json --watch --coverage --verbose",
     "prepublish": "npm run build",
@@ -35,31 +34,22 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "7.14.8",
-    "@babel/core": "7.15.0",
-    "@babel/plugin-proposal-object-rest-spread": "7.14.7",
-    "@babel/preset-env": "7.15.0",
     "@commitlint/cli": "13.1.0",
     "@commitlint/config-conventional": "13.1.0",
     "@types/debug": "4.1.7",
     "@types/jest": "27.0.1",
     "@types/lodash.clonedeep": "4.5.6",
-    "@types/lodash.merge": "4.6.6",
     "@types/node": "16",
-    "@types/sinon": "10.0.2",
     "@typescript-eslint/eslint-plugin": "4.29.3",
     "@typescript-eslint/parser": "4.29.3",
     "codecov": "3.8.3",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
-    "eslint-plugin-import": "2.24.2",
     "eslint-plugin-prettier": "3.4.1",
-    "eslint-watch": "7.0.0",
     "husky": "7.0.2",
     "jest": "27.0.6",
     "lint-staged": "11.1.2",
     "prettier": "2.3.2",
-    "regenerator-runtime": "0.13.9",
     "semantic-release": "17.4.7",
     "ts-jest": "27.0.5",
     "typescript": "4.3.5"
@@ -67,8 +57,7 @@
   "dependencies": {
     "debug": "4.3.2",
     "eventemitter3": "4.0.7",
-    "lodash.clonedeep": "4.5.0",
-    "lodash.merge": "4.6.2"
+    "lodash.clonedeep": "4.5.0"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix"
