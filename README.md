@@ -19,6 +19,7 @@ Sourced makes no assumptions about how you _store_ your events and snapshots. Th
 - [mateodelnorte/sourced-repo-mongo](https://github.com/mateodelnorte/sourced-repo-mongo)
 
 Partially Implemented (only get, commit - no getAll, commitAll - ok for many use cases - PRs welcome!)
+- [CloudNativeEntrepreneur/sourced-repo-typeorm](https://github.com/CloudNativeEntrepreneur/sourced-repo-typeorm) - works with PostgreSQL and CockroachDB - written in Typscript
 - [dermidgen/sourced-repo-couchdb](https://github.com/dermidgen/sourced-repo-couchdb)
 - [CloudNativeEntrepreneur/sourced-repo-svelte-local-storage-store](https://github.com/CloudNativeEntrepreneur/sourced-repo-svelte-local-storage-store)
 - [wolfejw86/sourced-repo-arc-dynamo](https://github.com/wolfejw86/sourced-repo-arc-dynamo)
