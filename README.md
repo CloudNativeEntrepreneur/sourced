@@ -17,12 +17,13 @@ For example usage, see the [examples](./examples) and [__tests__](./__tests__).
 Sourced makes no assumptions about how you _store_ your events and snapshots. The library is small and tight with only the required functionality to define entities and their logic, enqueue and emit events, and track event state to later be persisted. To actually persist, use one of the following libraries or implement your own: 
 
 - [mateodelnorte/sourced-repo-mongo](https://github.com/mateodelnorte/sourced-repo-mongo)
+- [wolfejw86/sourced-repo-dynamodb](https://github.com/wolfejw86/sourced-repo-dynamodb)
 
 Partially Implemented (only get, commit - no getAll, commitAll - ok for many use cases - PRs welcome!)
 - [CloudNativeEntrepreneur/sourced-repo-typeorm](https://github.com/CloudNativeEntrepreneur/sourced-repo-typeorm) - works with PostgreSQL and CockroachDB - written in Typscript
-- [dermidgen/sourced-repo-couchdb](https://github.com/dermidgen/sourced-repo-couchdb)
 - [CloudNativeEntrepreneur/sourced-repo-svelte-local-storage-store](https://github.com/CloudNativeEntrepreneur/sourced-repo-svelte-local-storage-store)
-- [wolfejw86/sourced-repo-arc-dynamo](https://github.com/wolfejw86/sourced-repo-arc-dynamo)
+- [dermidgen/sourced-repo-couchdb](https://github.com/dermidgen/sourced-repo-couchdb)
+
 
 # ES6 Example 
 
