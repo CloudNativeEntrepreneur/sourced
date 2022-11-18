@@ -25,7 +25,7 @@ Partially Implemented (only get, commit - no getAll, commitAll - ok for many use
 - [dermidgen/sourced-repo-couchdb](https://github.com/dermidgen/sourced-repo-couchdb)
 
 
-# ES6 Example 
+# Example 
 
 ```javascript
 const Entity = require('sourced').Entity;
