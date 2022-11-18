@@ -7,3 +7,5 @@ jobs:
   
   release:
     uses: CloudNativeEntrepreneur/actions/.github/workflows/node-semantic-release.yaml@main
+    secrets: inherit
+
