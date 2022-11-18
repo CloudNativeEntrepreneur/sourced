@@ -15,9 +15,8 @@
     "lint:fix": "eslint --fix src __tests__",
     "test": "DEBUG=sourced jest --config jest.json --coverage --verbose",
     "test:watch": "DEBUG=sourced jest --config jest.json --watch --coverage --verbose",
-    "prepublish": "npm run build",
     "semantic-release": "semantic-release",
-    "prepare": "husky install"
+    "install-husky": "husky install"
   },
   "author": {
     "name": "mattwalters5@gmail.com"
