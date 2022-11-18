@@ -11,4 +11,4 @@ on:
 jobs:
 
   node-quality:
-    uses: CloudNativeEntrepreneur/actions/.github/workflows/node-quality.yml@main
+    uses: CloudNativeEntrepreneur/actions/.github/workflows/node-quality.yaml@main
