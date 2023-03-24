@@ -50,7 +50,7 @@
     "@typescript-eslint/parser": "5.23.0",
     "codecov": "3.8.3",
     "eslint": "8.36.0",
-    "eslint-config-prettier": "8.3.0",
+    "eslint-config-prettier": "8.8.0",
     "eslint-plugin-prettier": "4.0.0",
     "husky": "7.0.4",
     "jest": "27.5.1",
